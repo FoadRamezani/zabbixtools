@@ -1,0 +1,4 @@
+UserParameter :
+		1 - vi /etc/zabbix/zabbix_agentd.d/userparameter_test.conf
+			UserParameter=mykey, shuf -i 1-100 -n 1
+		2 - zabbix_agentd -c /etc/zabbix_agentd.conf -t mykey

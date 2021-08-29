@@ -1,0 +1,6 @@
+Export DataBase :
+	mysqldump --all-databases -p > backup.sql
+	mysqldump zabbix -p > backup.sql
+
+Import DataBase :
+	mysql zabbix -p < backup.sql

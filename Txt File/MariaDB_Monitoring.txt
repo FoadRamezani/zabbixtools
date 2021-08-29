@@ -1,0 +1,20 @@
+MariaDB Monitoring :
+	1 - yum install mariadb-server
+	2 - systemctl start mariadb
+	3 - systemct restart zabbix-agent
+	4 - mysql -u root -p
+		GRANT USAGE ON *.* TO 'zabbix'@'localhost' IDENTIFIED BY '123456';
+		GRANT USAGE ON *.* TO 'zabbix'@'127.0.0.1' IDENTIFIED BY '123456';
+		flush privileges;
+	5 - /etc/zabbix/.my.cnf
+		[mysql]
+		user=zabbix
+		password=123456
+		[mysqladmin]
+		user=zabbix
+		password=123456
+	6 - vi /etc/zabbix/zabbix_agentd.d/userparameter_mysql.conf
+		Replace HOME = /var/lib/zabbix with HOME =/etc/zabbix
+	7 - systemctl restart mariadb
+	8 - systemctl restart zabbix-agent
+		mysqlslap --user=root --password --host=localhost --concurrency=100 --iterations=100 --auto-generate-sql --verbose

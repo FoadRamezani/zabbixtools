@@ -1,0 +1,4 @@
+Esxi Macros :
+	{$USERNAME}   ---> root
+	{$PASSWORD}   ---> Test_1234
+	{$URL}        ---> https://192.168.1.107/sdk

@@ -1,0 +1,37 @@
+Impelement LAMP and Wordpress:
+
+	Install Apache :
+		1 - yum -y install httpd
+		2 - systemctl start httpd 
+		3 - systemctl enable httpd
+		4 - firewall-cmd --add-service=http --permanent
+		5 - firewall-cmd --reload
+		6 - rm -f /etc/httpd/conf.d/welcome.conf
+
+	Install PHP :
+		1 - yum -y install php php-mbstring php-pear
+		2 - vi /etc/php.ini
+			line 878 : date.timezone = "Asia/Tehran" 		
+		3 - systemctl restart httpd 
+
+	Install MySql :
+		1 - yum -y install mariadb-server
+		2 - vi /etc/my.cnf
+			[mysqld]
+			character-set-server=utf8
+		3 - systemctl start mariadb 
+		4 - systemctl enable mariadb
+		5 - mysql_secure_installation 
+		6 - mysql -u root -p 
+			create database myweb;
+			grant all privileges on myweb.* to myuser@'localhost' identified by '123456'; 
+			grant all privileges on zabbix.* to zabbix@'127.0.0.1' identified by '123456'; 
+			flush privileges; 
+		7 - firewall-cmd --add-service=mysql --permanent
+		8 - firewall-cmd --reload
+
+		
+		
+		
+		
+		

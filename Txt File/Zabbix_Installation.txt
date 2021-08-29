@@ -1,0 +1,90 @@
+Zabbix Installation :
+
+	Install Apache :
+		1 - yum -y install httpd
+		2 - vi /etc/httpd/conf/httpd.conf
+			line 151: AllowOverride All
+			line 164: DirectoryIndex index.html index.cgi index.php
+			ServerTokens Prod
+			KeepAlive On
+		3 - systemctl start httpd 
+		4 - systemctl enable httpd
+		5 - firewall-cmd --add-service=http --permanent 
+		6 - firewall-cmd --reload
+		7 - rm -f /etc/httpd/conf.d/welcome.conf
+
+	Install PHP :
+		1 - yum -y install php php-mbstring php-pear
+		2 - vi /etc/php.ini
+			line 878 : date.timezone = "Asia/Tehran" 		
+		3 - systemctl restart httpd 
+		4 - echo "<?php phpinfo() ?>" > /var/www/html/index.php
+
+	Install MySql :
+		1 - yum -y install mariadb-server
+		2 - vi /etc/my.cnf
+			[mysqld]
+			character-set-server=utf8
+		3 - systemctl start mariadb 
+		4 - systemctl enable mariadb
+		5 - mysql_secure_installation 
+		6 - mysql -u root -p 
+			show databases;
+			use user;
+			show tables;
+			describe user;
+			select host,user,password from user;
+			exit
+		7 - firewall-cmd --add-service=mysql --permanent
+		8 - firewall-cmd --reload
+	
+	Install Zabbix Server :
+		1 - yum -y install php-mysql php-gd php-xml php-bcmath 
+		2 - http://repo.zabbix.com/zabbix/
+		3 - yum -y install http://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/zabbix-release-3.2-1.el7.noarch.rpm
+		4 - yum -y install zabbix-get zabbix-server-mysql zabbix-web-mysql 
+		5 - mysql -u root -p 
+			create database zabbix;
+			grant all privileges on zabbix.* to zabbix@'localhost' identified by '123456'; 
+			grant all privileges on zabbix.* to zabbix@'127.0.0.1' identified by '123456'; 
+			flush privileges;
+			show databases;
+			use zabbix;
+			show tables;
+			exit
+		6 - cd /usr/share/doc/zabbix-server-mysql-*/ 
+		7 - gunzip create.sql.gz
+		8 - mysql -u root -p zabbix < create.sql 
+		9 - mysql -u root -p 
+			show databases;
+			use zabbix;
+			show tables;
+			exit
+		10 - vi /etc/zabbix/zabbix_server.conf
+			 line 82:  DBHost=localhost
+			 line 116: DBPassword=123456
+		11 - systemctl start zabbix-server
+		12 - vi /etc/sysconfig/selinux ---> set to disabled and restart system and after restart start zabbix-server
+		13 - systemctl enable zabbix-server
+		14 - vi /etc/httpd/conf.d/zabbix.conf
+			line 10: Require ip 127.0.0.1 192.168.1.0/24
+			line 20: php_value date.timezone Asia/Tehran
+		15 - systemctl restart httpd
+		16 - firewall-cmd --add-service={http,https} --permanent
+		17 - firewall-cmd --add-port={10051/tcp,10050/tcp} --permanent
+		18 - firewall-cmd --reload 
+		19 - http://IP-Address/zabbix
+		20 - login ---> user=admin & password=zabbix
+
+	Install Zabbix Agent :
+		1 -  yum -y install zabbix-agent
+		2 - vi /etc/zabbix/zabbix_agentd.conf
+			line 95:  Server=127.0.0.1
+			line 136: ServerActive=127.0.0.1
+			line 147: Hostname=zabbix.local
+		3 - systemctl start zabbix-agent 
+		4 - systemctl enable zabbix-agent 
+
+			
+
+			

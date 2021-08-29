@@ -1,0 +1,42 @@
+install offline zabbix agent :
+		1 - extract zabbix agent file
+		2 - cp -v sbin/* /usr/sbin/
+		3 - cp -v bin/* /usr/bin/*
+		4 - mkdir /etc/zabbix 
+		6 - cp -v conf/zabbix_agentd.conf /etc/zabbix
+		7 - mkdir /etc/zabbix/zabbix_agentd.d
+		8 - cp -v conf/zabbix_agentd/* /etc/zabbix/zabbix_agentd.d/
+		9 - vi /etc/zabbix/zabbix_agentd.conf
+			9.1 - Server=192.168.1.100
+			9.2 - ServerActive=192.168.1.100
+			9.3 - Hostname=offline.local
+		10 - useradd zabbix
+		11 - zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
+		12 - install glibc
+			12.1 - rpm -Uhv nss-softokn-freebl-3.28.3-8.el7_4.x86_64.rpm
+			12.2 - rpm --nodeps -Uvh glibc-2.17-196.el7.i686.rpm
+		13 - firewall-cmd --add-port=10050/tcp --permanent
+		14 - firewall-cmd --reload
+		15 - vi /etc/systemd/system/zabbix_agentd.service
+	
+			[Unit]
+			Description=Zabbix Agent
+			After=syslog.target network.target network-online.target
+			Wants=network.target network-online.target
+
+			[Service]
+			Type=oneshot
+			ExecStart=/usr/sbin/zabbix_agentd -c /etc/zabbix/zabbix_agentd.conf
+			RemainAfterExit=yes
+			PIDFile=/var/run/zabbix/zabbix_agentd.pid
+
+			[Install]
+			WantedBy=multi-user.target
+			
+		16 - chmod 777 zabbix_agentd.service
+		17 - mkdir /var/run/zabbix
+		18 - chown -R zabbix:zabbix /var/run/zabbix
+		19 - vi /etc/sysconfig/selinux ---> set to disabled and restart system
+		20 - systemctl start zabbix_agentd
+		21 - systemctl enable zabbix_agentd
+	

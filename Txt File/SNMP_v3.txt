@@ -1,0 +1,8 @@
+SNMP  Authentication :
+	noAuthnoPriv - Communication without authentication and privacy.
+	authNoPriv - Communication with authentication and without privacy. The protocols used for Authentication are MD5 and SHA (Secure Hash Algorithm).
+	authPriv - Communication with authentication and privacy. The protocols used for Authentication are MD5 and SHA ; and for Privacy, DES (Data Encryption Standard) and AES (Advanced Encryption Standard) protocols can be used. For Privacy Support, you have to install some third-party privacy packages. Details about installation is dealt with in the topic "Privacy Support".
+========================
+{$SNMP_SECNAME}
+{$SNMP_AUTH}
+{$SNMP_PRIV}

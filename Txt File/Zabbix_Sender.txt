@@ -1,0 +1,5 @@
+Use Zabbix_Sender :
+	1 - create item and set type to zabbix agent(active) or zabbix trapper
+	2 - yum install zabbix-sender -y
+	3 - zabbix_sender -z 192.168.1.101 -s lamp.local -k mykey -o 10
+	4 - show value in latest data
